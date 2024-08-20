@@ -1,24 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const [user, setUser] = useState({ email: "", password: "" });
+    const navigate = useNavigate();
+
+    const handleChange = (input) => {
+        setUser({ ...user, [input.target.name]: input.target.value });
+    }
+
+    const login = () => {
+        //chamada para o back-end para verificar as credenciais
+        if (user.email == "frankwco@gmail.com" && user.password == "123") {
+            let token = "token do backend"
+            localStorage.setItem("token", token);
+            localStorage.setItem("email", user.email);
+            navigate("/");
+        } else {
+            alert("usuário ou senha incorretos");
+        }
+    }
+
     return (
         <div className="flex justify-content-center align-items-center min-h-screen">
             <Card title="Login" className="p-4" style={{ width: '400px' }}>
                 <div className="grid">
                     <div className="field col-12">
-                        <label htmlFor="nome">Nome</label><br />
-                        <InputText id="nome" className="w-full" />
+                        <label htmlFor="email">Email</label><br />
+                        <InputText onChange={handleChange} name="email" id="email" className="w-full" />
                     </div>
                     <div className="field col-12">
-                        <label htmlFor="senha">Senha</label><br />
-                        <Password id="senha" feedback={false} className="w-full" inputClassName="w-full" />
+                        <label htmlFor="password">Senha</label><br />
+                        <Password onChange={handleChange} name="password" id="password" feedback={true} toggleMask className="w-full" inputClassName="w-full" />
                     </div>
                 </div>
-                <Button label="Login" className="w-full mt-3" />
+                <Button onClick={login} label="Login" className="w-full mt-3" />
             </Card>
         </div>
     );
