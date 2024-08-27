@@ -30,6 +30,7 @@ const Login = () => {
     return (
         <div className="flex justify-content-center align-items-center min-h-screen">
             <Card title="Login" className="p-4" style={{ width: '400px' }}>
+                <h1 className='textColor'>Página de Login</h1>
                 <div className="grid">
                     <div className="field col-12">
                         <label htmlFor="email">Email</label><br />
