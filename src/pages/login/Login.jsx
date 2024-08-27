@@ -4,10 +4,12 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const [user, setUser] = useState({ email: "", password: "" });
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleChange = (input) => {
         setUser({ ...user, [input.target.name]: input.target.value });
@@ -38,7 +40,7 @@ const Login = () => {
                         <Password onChange={handleChange} name="password" id="password" feedback={true} toggleMask className="w-full" inputClassName="w-full" />
                     </div>
                 </div>
-                <Button onClick={login} label="Login" className="w-full mt-3" />
+                <Button onClick={login} label={t('button.login')} className="w-full mt-3" />
             </Card>
         </div>
     );
