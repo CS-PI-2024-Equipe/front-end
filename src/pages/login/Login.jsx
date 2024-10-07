@@ -5,6 +5,7 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import './Login.css';
 
 const Login = () => {
     const [user, setUser] = useState({ email: "", password: "" });
@@ -38,7 +39,7 @@ const Login = () => {
                     </div>
                     <div className="field col-12">
                         <label htmlFor="password">Senha</label><br />
-                        <Password onChange={handleChange} name="password" id="password" feedback={true} toggleMask className="w-full" inputClassName="w-full" />
+                        <Password onChange={handleChange} name="password" id="password" feedback={false} toggleMask className="w-full" inputClassName="w-full" />
                     </div>
                 </div>
                 <Button onClick={login} label={t('button.login')} className="w-full mt-3" />
