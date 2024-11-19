@@ -27,9 +27,9 @@ function App() {
 
           <Route path='/login'
             element={<SimpleLayout><Login /></SimpleLayout>} />
-          <Route path='/recuperar-senha' element={<SimpleLayout><RecuperarSenha /></SimpleLayout>} />
-          <Route path='/alterar-senha' element={<SimpleLayout><AlterarSenha /></SimpleLayout>} />
-          <Route path='/cadastro-usuario' element={<SimpleLayout><CadastroUsuario /></SimpleLayout>} />
+          <Route path='/password-recovery' element={<SimpleLayout><RecuperarSenha /></SimpleLayout>} />
+          <Route path='/password-change' element={<SimpleLayout><AlterarSenha /></SimpleLayout>} />
+          <Route path='/new-user' element={<SimpleLayout><CadastroUsuario /></SimpleLayout>} />
         </Routes>
       </BrowserRouter>
       {/* <Footer/> */}
