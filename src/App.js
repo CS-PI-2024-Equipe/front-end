@@ -10,6 +10,7 @@ import PrivateRouter from './components/PrivateRouter';
 import RecuperarSenha from './pages/login/recuperar-senha/RecuperarSenha';
 import AlterarSenha from './pages/login/alterar-senha/AlterarSenha';
 import CadastroUsuario from './pages/cadastro-usuario/CadastroUsuario';
+import Category from './pages/category/Category';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
           <Route element={<PrivateRouter />}>
             <Route path='/'
               element={<DefaultLayout><Home /></DefaultLayout>} />
-            {/* Inserir outras rotas de acesso restrito */}
+               <Route path='/category' element={<DefaultLayout><Category /></DefaultLayout>} />
+            {/* Outras rotas de acesso restrito */}
           </Route>
 
           <Route path='/login'
