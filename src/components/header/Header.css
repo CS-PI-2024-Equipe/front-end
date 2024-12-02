@@ -1,6 +1,37 @@
-.header{
-    border: 1px solid #aaa9a9;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #dfdfdf;
+.header {
+    background-color: #343a40;
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
+
+.p-menubar {
+    border: none;
+    background: transparent;
+}
+
+.p-menubar .p-menuitem-link .p-menuitem-text {
+    color: white !important; 
+    font-weight: bold;
+}
+
+.p-menubar .p-menuitem-link:hover {
+    background-color: #495057 !important; 
+}
+
+.p-menubar .p-menuitem-link:hover .p-menuitem-text {
+    color: white !important; 
+}
+
+.p-button-text {
+    color: white !important; 
+    background: transparent; 
+}
+
+.p-button-text:hover {
+    color: #f8f9fa !important; 
+    background-color: #495057 !important;
+}
+

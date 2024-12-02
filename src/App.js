@@ -11,6 +11,9 @@ import RecuperarSenha from './pages/login/recuperar-senha/RecuperarSenha';
 import AlterarSenha from './pages/login/alterar-senha/AlterarSenha';
 import CadastroUsuario from './pages/cadastro-usuario/CadastroUsuario';
 import Category from './pages/category/Category';
+import Unauthorized from './pages/unauthorized/Unauthorized';
+import Auction from './pages/auction/Auction';
+import AuctionPublic from './pages/auction-public/AuctionPublic';
 
 
 function App() {
@@ -24,9 +27,12 @@ function App() {
             <Route path='/'
               element={<DefaultLayout><Home /></DefaultLayout>} />
                <Route path='/category' element={<DefaultLayout><Category /></DefaultLayout>} />
+               <Route path='/auction' element={<DefaultLayout><Auction /></DefaultLayout>} />
             {/* Outras rotas de acesso restrito */}
           </Route>
-
+    
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/auction-public" element={<AuctionPublic />} />
           <Route path='/login'
             element={<SimpleLayout><Login /></SimpleLayout>} />
           <Route path='/password-recovery' element={<SimpleLayout><RecuperarSenha /></SimpleLayout>} />
