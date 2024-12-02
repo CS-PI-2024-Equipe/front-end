@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DataView } from "primereact/dataview";
 import { Button } from "primereact/button";
 import { PanelMenu } from "primereact/panelmenu";
 import { Dropdown } from "primereact/dropdown";
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 import AuctionService from "../../services/AuctionService";
 import CategoryService from "../../services/CategoryService";
 import "./AuctionPublic.css";
@@ -13,8 +15,9 @@ const AuctionPublic = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [statusFilter, setStatusFilter] = useState(null);
     const [loading, setLoading] = useState(true);
-    const isUserLoggedIn = () => !!localStorage.getItem("token");
+    const stompClientRef = useRef(null); 
 
+    const isUserLoggedIn = () => !!localStorage.getItem("token");
 
     const auctionService = new AuctionService();
     const categoryService = new CategoryService();
@@ -23,6 +26,43 @@ const AuctionPublic = () => {
         loadCategories();
         loadAuctions();
     }, []);
+
+    useEffect(() => {
+        if (auctions.length > 0) {
+            const socket = new SockJS("http://localhost:8080/ws");
+            const stomp = Stomp.over(socket);
+
+            stomp.connect({}, () => {
+                console.log("Asdasdasddsa")
+                auctions.forEach((auction) => {          
+                    stomp.subscribe(`/topic/auction/${auction.id}`, (message) => {                     
+                        const updatedAuction = JSON.parse(message.body);
+                        console.log(updatedAuction)
+                        setAuctions((prevAuctions) =>
+                            prevAuctions.map((a) =>{
+                                console.log(a.id === updatedAuction.auctionId ? updatedAuction : a);
+                               return a.id === updatedAuction.auctionId ?  {
+                                ...a,
+                                valueBid: updatedAuction.newValue,
+                                emailUserBid: updatedAuction.emailUser,
+                            } : a;
+                            }
+                               
+                            )
+                      );
+                    });
+                });
+            });
+
+            stompClientRef.current = stomp;
+
+            return () => {
+                if (stompClientRef.current) {
+                    stompClientRef.current.disconnect();
+                }
+            };
+        }
+    }, [auctions]);
 
     const loadCategories = async () => {
         try {
@@ -50,6 +90,22 @@ const AuctionPublic = () => {
         }
     };
 
+    const sendBid = (auction) => {
+        if (stompClientRef.current && stompClientRef.current.connected) {
+            stompClientRef.current.send(
+                `/app/bid/${auction.id}`,
+                {},
+                JSON.stringify({
+                    auctionId:auction.id,
+                    userToken: localStorage.getItem("token"),
+                })
+            );
+        } else {
+            console.error("STOMP client is not connected.");
+        }
+    };
+    
+
     const filteredAuctions = auctions.filter((auction) => {
         const matchesCategory = selectedCategory
             ? auction.category?.id === selectedCategory.id
@@ -68,16 +124,25 @@ const AuctionPublic = () => {
             <p><strong>Início:</strong> {new Date(auction.startDateTime).toLocaleString()}</p>
             <p><strong>Fim:</strong> {new Date(auction.endDateTime).toLocaleString()}</p>
             <p><strong>Incremento:</strong> R$ {auction.incrementValue}</p>
+            <p><strong>Valor:</strong> R$ {auction.valueBid}</p>
+            <p><strong>Usuário:</strong> {auction.emailUserBid}</p>
             <Button label="Ver Detalhes" className="p-button-outlined p-button-primary" />
             {isUserLoggedIn() ? (
-                <Button label="Lance" className="p-button-raised p-button-success" style={{ marginTop: "10px" }} />
-            ):'Faça login para dar lance'}
+                <Button
+                    label="Lance"
+                    className="p-button-raised p-button-success"
+                    style={{ marginTop: "10px" }}
+                    onClick={() => sendBid(auction)}
+                />
+            ) : (
+                "Faça login para dar lance"
+            )}
         </div>
     );
 
     return (
         <div className="auction-public-container">
-          
+ 
             <div className="sidebar">
                 <PanelMenu model={categories} style={{ width: "300px" }} />
                 <div className="filter">
@@ -95,7 +160,6 @@ const AuctionPublic = () => {
                 </div>
             </div>
 
-         
             <div className="main-content">
                 <DataView
                     value={filteredAuctions}
